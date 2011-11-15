@@ -6,3 +6,7 @@
 %     imin: The input image of the captured QR-code.
 %   OUT:
 %     strout: The resulting character string of the coded message. 
+
+function strout = getinfo(imin)
+
+return;
