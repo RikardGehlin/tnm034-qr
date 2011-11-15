@@ -1,3 +1,4 @@
+function strout = tnm034(imin)
 % DESCRIPTION
 %   A function that removes noise from the supplied image
 
@@ -7,8 +8,6 @@
 %   OUT:
 %     strout: The resulting character string of the coded message. 
 %     The string must be in a pre-defined format given in the course description.
-
-function strout = tnm034(imin)
 
 image = imread(imin); % reads the given image
 double_image = im2double(image); % turning the pixel-values into double-values
