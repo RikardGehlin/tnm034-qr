@@ -17,8 +17,8 @@ normalized_image = double_image / max(double_image(:)); % normalizes between 0 a
 [width, height] = size(normalized_image);
 for x = 1 : width
     for y = 1 : height
-        %gaussian highpass-filter för att ta fram kanter s.184 i BoB-boken
-        % distance function från s.167 i BoB-boken
+        %gaussian highpass-filter för att ta fram kanter
+        % distance function från s.
         distance[x,y] = ((x-(width/2))^2 + (y-(height/2))^2)^(1/2);
         gauss_filter[x,y] = 1 - exp(-gauss[x,y]^2/(2*gauss[0,0]^2)); 
         
