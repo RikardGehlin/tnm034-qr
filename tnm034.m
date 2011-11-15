@@ -18,8 +18,8 @@ normalized_image = double_image / max(double_image(:)); % normalizes between 0 a
 for x = 1 : width
     for y = 1 : height
         %gaussian highpass-filter för att ta fram kanter
-        gauss[x,y] = ((x-(width/2))^2 + (y-(height/2))^2)^(1/2);
-        filtrerad[x,y] = 1 - exp(-gauss[x,y]^2/(2*gauss[0,0]^2)); 
+        distance[x,y] = ((x-(width/2))^2 + (y-(height/2))^2)^(1/2);
+        gauss_filter[x,y] = 1 - exp(-gauss[x,y]^2/(2*gauss[0,0]^2)); 
         
         if(normalized_image(x,y) < 0,5) %mät ut punkter, sätt in i respektive vektor
         %x_axis = 7 värden ifrån (x,y) i x-led där x[0]= (x,y)
