@@ -23,14 +23,20 @@ for x = 1 : width
 %        else
 %            normalized_image(x,y) = 1;
 %        end
-        o[0] = x;
-        o[1] = y;
-        o[2] = r;
-        o[3] = s;
-        T[o] = ( central_symmetry(x_axis) + central_symmetry(y_axis) + central_symmetry(r_axis) + central_symmetry(s_axis) )/4;
-        P[o] = ( ratio_characteristic(x_axis) + ratio_characteristic(y_axis) + ratio_characteristic(r_axis) + ratio_characteristic(s_axis) )/4;
-        Q[o] = ( square_characteristic(x_axis,y_axis) + square_characteristic(r_axis, s_axis) )/2;
-        B[o] = ( T[o] + P[o] + Q[o] )/3;
+
+
+%gaussian highpass-filter för att ta fram kanter
+if(normalized_image(x,y) < 0,5)
+    %mät ut punkter, sätt in i respektive vektor
+    
+%x_axis = 7 värden ifrån (x,y) i x-led där x[0]= (x,y)
+%y_axis = 7 värden ifrån (x,y) i y-led
+%r_axis = 7 värden ifrån (x,y) i r-led
+%s_axis = 7 värden ifrån (x,y) i s-led
+        T[x,y] = ( central_symmetry(x_axis) + central_symmetry(y_axis) + central_symmetry(r_axis) + central_symmetry(s_axis) )/4;
+        P[x,y] = ( ratio_characteristic(x_axis) + ratio_characteristic(y_axis) + ratio_characteristic(r_axis) + ratio_characteristic(s_axis) )/4;
+        Q[x,y] = ( square_characteristic(x_axis,y_axis) + square_characteristic(r_axis, s_axis) )/2;
+        B[x,y] = ( T[x,y] + P[x,y] + Q[x,y] )/3;
     end
 end
 %localization(normalized_image);
