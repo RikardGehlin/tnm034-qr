@@ -1,7 +1,8 @@
 function imout = edge_detection(imin)
 % DESCRIPTION
 %   A function that detects edges in an image and returns the result as a
-%   new image.
+%   new image. Based on Gaussian high-pass filter from the book Digital
+%   Image Processing by Gonzalez & Woods.
 
 % PARAMETERS
 %   IN:
@@ -40,8 +41,9 @@ ideal_hpf(ideal_hpf>=D0) = 1;
 % Create Gaussian high-pass filter
 gaussian_hpf = 1 - exp(-(D.^2)/(2.*D0.^2));
 
+% Choose high-pass filter type: gaussian_hpf OR ideal_hpf
 hpf = gaussian_hpf;
-% /WIP: Create a high-pass filter
+
 
 % Apply the high-pass filter
 im_hpf = im_fft_shifted .* hpf;
