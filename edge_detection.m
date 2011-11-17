@@ -31,6 +31,8 @@ im_fft_shifted = fftshift(im_fft);
 D = (x.^2 + y.^2).^(1/2);
 
 % Set threshold
+% TODO: Base threshold on image size. Larger thresholds better for larger
+%       images.
 D0 = 150;
 
 % Create ideal high-pass
