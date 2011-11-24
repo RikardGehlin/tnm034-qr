@@ -17,6 +17,7 @@ imshow(geo);
 geo = bwlabel(geo);
 centrumkoordinater = regionprops(geo,'centroid');
 size_of_centrumkoordinater = length(centrumkoordinater);
+
 %gör en tabell av koordinaterna
 for n = 1 : size_of_centrumkoordinater
     uv(n,:) = centrumkoordinater(n).Centroid;

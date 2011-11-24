@@ -1,6 +1,5 @@
 % DESCRIPTION
-%   A function that translates the images to the origo
-
+%   A function that scales the image to 41*41
 % PARAMETERS
 %   IN:
 %     imin: The input image normalized between 0 and 1
@@ -12,10 +11,13 @@ function imout = noise(imin)
     double_image = im2double(image); % turning the pixel-values into double-values
     normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
     normalized_image = normalized_image(:,:,1); %only need to calculate in one dimension, since black/white
+    
     for i=1:41
         for j=1:41
-            new_image(i,j) = normalized_image(,9); 
+            new_image(i,j) = normalized_image(8,8); 
         end
     end
+    
     imshow(new_image)
-return;
+    
+return imout;
