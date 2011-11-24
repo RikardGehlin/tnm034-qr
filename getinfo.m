@@ -33,11 +33,12 @@ function strout = getinfo(imin)
             end
         end
     end
+    
+    strout = '';
     for z = 1 : length(number_vector(1:end/8)) %go through vector/8 since binary = 8 numbers/letter
         letter_string = num2str(number_vector(1:8)); %select the 8 first and make them into a string
-        message = [x, char(bin2dec(letter_string))]; %take string, and turn the into letters, add into a new string
+        strout = [strout, char(bin2dec(letter_string))]; %take string, and turn the into letters, add into a new string
         number_vector = number_vector(9:end); %remove the 8 first numbers in vector
     end
-    strout = message; %renaming
-    
-return;
+
+return strout;
