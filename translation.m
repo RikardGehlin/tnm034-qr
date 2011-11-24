@@ -9,5 +9,5 @@
 
 function imout = noise(imin)
 
-    
+    ffff
 return imout;
