@@ -14,6 +14,8 @@ function imout = noise(imin)
     
     for i=1:41
         for j=1:41
+            %här behövs en funktion för att kunna skala om till enskilda
+            %pixelvärden
             new_image(i,j) = normalized_image(8,8); 
         end
     end
