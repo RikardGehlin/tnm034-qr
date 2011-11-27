@@ -22,6 +22,7 @@ function strout = getinfo(imin)
     normalized_image(1:8,34:41) = 0.5;
     normalized_image(33:37,33:37) = 0.5;
     
+    imshow(normalized_image)
     
     [height, width] = size(normalized_image);
     counter = 1;

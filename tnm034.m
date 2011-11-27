@@ -34,6 +34,7 @@ B = zeros(height, width);
 
 for x = 1 : width
     for y = 1 : height
+        
         if(normalized_image(y,x) < 0.5) %mät ut punkter, sätt in i respektive vektor
         % x_axis = 7 värden ifrån (y,x) i x-led där x[0]= (y,x)
         % y_axis = 7 värden ifrån (y,x) i y-led
