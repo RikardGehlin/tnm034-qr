@@ -42,4 +42,4 @@ function strout = getinfo(imin)
         number_vector = number_vector(9:end); %remove the 8 first numbers in vector
     end
 
-return strout;
+return;
