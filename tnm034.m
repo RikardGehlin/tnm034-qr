@@ -15,16 +15,15 @@ normalized_image = double_image / max(double_image(:)); % normalizes between 0 a
 
 [height, width] = size(normalized_image);
 
+% Hård tröskling... ändra?
+normalized_image(normalized_image<0.5) = 0;
+normalized_image(normalized_image>=0.5) = 1;
 
+im_edges = edge_detection(normalized_image);
 
-
-
-% gaussian highpass-filter för att ta fram kanter s.184 i BoB-boken
-% distance function från s.167 i BoB-boken
-distance(y,x) = ((x-(width/2))^2 + (y-(height/2))^2)^(1/2);
-gauss_filter(y,x) = 1 - exp(-gauss(y,x)^2/(2*gauss(0,0)^2)); 
-
-
+% Hård tröskling... OK?
+im_edges(im_edges<0.1) = 0;
+im_edges(im_edges>=0.1) = 1;
 
 % pre-allocate variables to speed up the program
 T = zeros(height, width);
@@ -32,22 +31,35 @@ P = zeros(height, width);
 Q = zeros(height, width);
 B = zeros(height, width);
 
-for x = 1 : width
-    for y = 1 : height
-        
-        if(normalized_image(y,x) < 0.5) %mät ut punkter, sätt in i respektive vektor
+
+% Testning av hur man bygger "axlarna"
+%tjena = [[400 300]; flipdim(find_edge_positions(im_edges, [400 300], [0 -1]), 1); find_edge_positions(im_edges, [400 300], [0 1])];
+%tjena(:,2)
+
+elements = 1:numel(im_edges);
+
         % x_axis = 7 värden ifrån (y,x) i x-led där x[0]= (y,x)
+'find vectors'
+tic
+x_axis = arrayfun(@(x) find_edge_positions(im_edges, [height, width], x, 'horizontal'), elements, 'UniformOutput', false);
+strout = x_axis;
+return
+y_axis = arrayfun(@(x) find_edge_positions(im_edges, [height, width], x, 'vertical'), elements, 'UniformOutput', false);
+%find_edge_positions(im_edges, [height, width], 104236, 'horizontal')
+toc
         
-        % y_axis = 7 värden ifrån (y,x) i y-led
+        % use x- and y-axis as r- and s- axis temporarily
+        r_axis = x_axis;
+        s_axis = y_axis;
         % r_axis = 7 värden ifrån (y,x) i r-led
         % s_axis = 7 värden ifrån (y,x) i s-led
+'calculate weighting'
         T(y,x) = ( central_symmetry(x_axis) + central_symmetry(y_axis) + central_symmetry(r_axis) + central_symmetry(s_axis) )/4;
         P(y,x) = ( ratio_characteristic(x_axis) + ratio_characteristic(y_axis) + ratio_characteristic(r_axis) + ratio_characteristic(s_axis) )/4;
         Q(y,x) = ( square_characteristic(x_axis,y_axis) + square_characteristic(r_axis, s_axis) )/2;
         B(y,x) = ( T(y,x) + P(y,x) + Q(y,x) )/3;
-        end
-    end
-end
+imshow(B)
+
 %localization(normalized_image);
 
 %noise(normalized_image); % calls a function to remove all the noise in the picture
