@@ -22,4 +22,4 @@ function imout = noise(imin)
     
     imshow(new_image)
     
-return imout;
+return;
