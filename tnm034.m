@@ -37,8 +37,6 @@ B = zeros(height, width);
 %tjena(:,2)
 
 elements = 1:numel(im_edges);
-strout = im_edges;
-return
         % x_axis = 7 värden ifrån (y,x) i x-led där x[0]= (y,x)
 'find vectors'
 tic
