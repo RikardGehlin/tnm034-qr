@@ -8,5 +8,7 @@
 %     int: An integer which will be weighted later
 
 function weight = ratio_characteristic(axis)
-    weight = (1/7)*(abs((axis(6)-axis(2))/(axis(7)-axis(3)) - 1) + abs((axis(5)-axis(2))/(axis(7)-axis(4)) - 1) + abs((axis(4)-axis(2))/(axis(7)-axis(5)) - 1) + abs((axis(6)-axis(4))/(axis(7)-axis(5)) - 1) + abs((axis(5)-axis(3))/(axis(4)-axis(2)) - 1) + abs((axis(4)-axis(3))/(axis(6)-axis(5)) - 1) + abs((axis(3)-axis(2))/(axis(7)-axis(6)) - 1));
+
+    weight = (1./7)*(abs((axis(6,:)-axis(2,:))./(axis(7,:)-axis(3,:)) - 1) + abs((axis(5,:)-axis(2,:))./(axis(7,:)-axis(4,:)) - 1) + abs((axis(4,:)-axis(2,:))./(axis(7,:)-axis(5,:)) - 1) + abs((axis(6,:)-axis(4,:))./(axis(7,:)-axis(5,:)) - 1) + abs((axis(5,:)-axis(3,:))./(axis(4,:)-axis(2,:)) - 1) + abs((axis(4,:)-axis(3,:))./(axis(6,:)-axis(5,:)) - 1) + abs((axis(3,:)-axis(2,:))./(axis(7,:)-axis(6,:)) - 1));
+
 return;
