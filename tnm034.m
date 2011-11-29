@@ -31,6 +31,7 @@ P = zeros(height, width);
 Q = zeros(height, width);
 B = zeros(height, width);
 
+
 % Testning av hur man bygger "axlarna"
 %tjena = [[400 300]; flipdim(find_edge_positions(im_edges, [400 300], [0 -1]), 1); find_edge_positions(im_edges, [400 300], [0 1])];
 %tjena(:,2)
