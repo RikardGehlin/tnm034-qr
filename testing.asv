@@ -23,5 +23,7 @@ normalized_image(normalized_image >= 0.5) = 1;
 
 [rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
-scaled = scale(cropped);
-getinfo(scaled)
+figure(2)
+%imshow(cropped)
+%scaled = scale(cropped);
+%getinfo(scaled)

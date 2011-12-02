@@ -31,8 +31,8 @@ normalized_image(normalized_image >= 0.5) = 1;
     if(bottom(1) < corner(1))
        B = imrotate(imin,90-correction);
     else
-       %49 if bild4, 53 if bild2 or if bild3
-       B = imrotate(normalized_image,49-angle);
+       %49 if bild4, 52 if bild2 from tnm034 else 53, 53 if bild3
+       B = imrotate(normalized_image,52-angle);
     end
     [nRowC, nColC] = find(B==127);
     new_corner = [nRowC, nColC];

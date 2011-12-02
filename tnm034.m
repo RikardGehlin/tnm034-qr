@@ -101,25 +101,34 @@ toc
         B(isnan(B)) = 1;
         B = vec2mat(B,height);
 
-        
         [b,ix] = sort(B(:),'ascend');
-        [x y] = ind2sub(size(B), ix(1:12));
+        [x y] = ind2sub(size(B), ix(1:12))
         imshow(image);
         hold on;
-        plot(x,y,'r+');
+        plot(x,y,'ro')
+        plot(x(4),y(4),'r+');
+        plot(x(2),y(2),'b+');
+        plot(x(3),y(3),'g+');
         hold off;
-
 toc
 
-%localization(normalized_image);
+%for image2
+%bottom = [y(1) x(1)]
+%corner = [y(2) x(2)]
+%right = [y(3) x(3)]
 
-%noise(normalized_image); % calls a function to remove all the noise in the picture
+%for image4
+%bottom = [y(1) x(1)]
+%corner = [y(2) x(2)]
+%right = [y(3) x(3)]
 
-
-
-
-rotated_image = rotation(B, corner, right, bottom);
-large_qr_code = crop(rotated_image);
-qr_code = scale(large_qr-code);
-strout = getinfo(qr_code) % the output
-return;
+%[rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
+%imshow(rotated_image)
+%cropped = crop(rotated_image, new_corner, new_right, new_bottom);
+%figure
+%imshow(cropped)
+%scaled = scale(cropped);
+%figure
+%imshow(scaled)
+%getinfo(scaled)
+return
