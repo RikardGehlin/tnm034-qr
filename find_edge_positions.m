@@ -9,8 +9,6 @@ function theAxis = test_edge(theArray, array_size, origin, alongAxis)
 %                 ];
 %array_size = size(theArray);
 
-origin = [(origin - array_size(1) * floor((origin-1)/array_size(1))) (floor((origin-1)/array_size(1)) + 1)];
-
 if strcmp(alongAxis, 'vertical')
     px = zeros(3,1);
     py = zeros(3,1);
@@ -39,10 +37,9 @@ if strcmp(alongAxis, 'vertical')
     end
    
 
-    theAxis = [origin(1) ny(end:-1:1)' py']';
-end 
+     theAxis = [origin(1) ny(end:-1:1)' py']';
 
-if strcmp(alongAxis, 'horizontal')
+elseif strcmp(alongAxis, 'horizontal')
     px = zeros(1,3);
     py = zeros(1,3);
     nx = zeros(1,3);
@@ -72,7 +69,7 @@ if strcmp(alongAxis, 'horizontal')
     
 
 
-    theAxis = [origin(2) nx(end:-1:1) px]';
+     theAxis = [origin(2) nx(end:-1:1) px]';
 end
 
 % position_offset = origin;

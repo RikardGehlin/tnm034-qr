@@ -46,7 +46,6 @@ gaussian_hpf = 1 - exp(-(D.^2)/(2.*D0.^2));
 % Choose high-pass filter type: gaussian_hpf OR ideal_hpf
 hpf = gaussian_hpf;
 
-
 % Apply the high-pass filter
 im_hpf = im_fft_shifted .* hpf;
 

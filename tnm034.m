@@ -10,6 +10,11 @@ function strout = tnm034(imin)
 %     The string must be in a pre-defined format given in the course description.
 
 image = imread(imin); % reads the given image
+
+if isrgb(image)
+    image = rgb2gray(image);
+end
+
 double_image = im2double(image); % turning the pixel-values into double-values
 normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
 
@@ -31,22 +36,56 @@ T = zeros(height, width);
 P = zeros(height, width);
 Q = zeros(height, width);
 B = zeros(height, width);
-
+im_edges = bwmorph(im_edges, 'skel', Inf);
 
 % Testning av hur man bygger "axlarna"
 %tjena = [[400 300]; flipdim(find_edge_positions(im_edges, [400 300], [0 -1]), 1); find_edge_positions(im_edges, [400 300], [0 1])];
 %tjena(:,2)
 
+
 elements = 1:numel(im_edges);
         % x_axis = 7 värden ifrån (y,x) i x-led där x[0]= (y,x)
-'find vectors'
-tic
-x_axis = arrayfun(@(x) find_edge_positions(im_edges, [height, width], x, 'horizontal'), elements, 'UniformOutput', false);
-x_axis = cell2mat(x_axis);
-y_axis = arrayfun(@(x) find_edge_positions(im_edges, [height, width], x, 'vertical'), elements, 'UniformOutput', false);
-y_axis = cell2mat(y_axis);
-%find_edge_positions(im_edges, [height, width], 104236, 'horizontal')
+        
+        x_axis = ones(7,numel(elements));
+        y_axis = ones(7,numel(elements));
+        
+        black_points = find(normalized_image == 0);
+        %x_axis(:,black_points)
+        
+        edges = find(im_edges == 1);
+        
+        tic
+        ratio = [1 1 3 1 1];
+'before1'
+        
+        points = zeros(1,(numel(edges)-5));
+'before2'
+        for i = 1:(numel(edges)-5)
+            
+            vec = edges(i:(i+5));
+            dv = diff(vec);
+            result = ( dv'/norm(dv') ) / ( ratio/norm(ratio) );
+            
+            if result > .95
+                points(i) = vec(1) + round((vec(6) - vec(1))/2);
+            end
+            
+        end
+        
+        points = points(points>0);
+       toc
+'find vectors'        
+        
+        
+        black_points = points;
+        for i = 1:numel(black_points)
+            origin = [(black_points(i) - height * floor((black_points(i)-1)/height)) (floor((black_points(i)-1)/height) + 1)];
+            x_axis(:,black_points(i)) = find_edge_positions(im_edges, [height, width], origin, 'horizontal');
+            y_axis(:,black_points(i)) = find_edge_positions(im_edges, [height, width], origin, 'vertical');
+        end
 toc
+%find_edge_positions(im_edges, [height, width], 104236, 'horizontal')
+
         
         % use x- and y-axis as r- and s- axis temporarily
         r_axis = x_axis;
@@ -61,10 +100,25 @@ toc
         B = ( T + P + Q )/3;
         B(isnan(B)) = 1;
         B = vec2mat(B,height);
-image = B';
+
+        
+        [b,ix] = sort(B(:),'ascend');
+        [x y] = ind2sub(size(B), ix(1:12));
+        imshow(image);
+        hold on;
+        plot(x,y,'r+');
+        hold off;
+
+toc
+
+%localization(normalized_image);
+
+%noise(normalized_image); % calls a function to remove all the noise in the picture
 
 
-rotated_image = rotation(image, corner, right, bottom);
+
+
+rotated_image = rotation(B, corner, right, bottom);
 large_qr_code = crop(rotated_image);
 qr_code = scale(large_qr-code);
 strout = getinfo(qr_code) % the output
