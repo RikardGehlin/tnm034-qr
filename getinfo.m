@@ -8,12 +8,14 @@
 %     strout: The resulting character string of the coded message. 
 
 function strout = getinfo(imin)
-	image = imread(imin); %read the submitted image
+	image = imin; %read the submitted image
     %------------------------------
     %might have been done in previous step!
-    double_image = im2double(image); % turning the pixel-values into double-values
-    normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
-    normalized_image = normalized_image(:,:,1); %only need to calculate in one dimension, since black/white
+    image = im2double(image); % turning the pixel-values into double-values
+    image = image / max(image(:)); % normalizes between 0 and 1
+    normalized_image = image(:,:,1); %only need to calculate in one dimension, since black/white
+    normalized_image(normalized_image<0.5) = 0;
+    normalized_image(normalized_image>=0.5) = 1;
     %-----------------------------
     
     %making the fips into gray areas
@@ -21,9 +23,7 @@ function strout = getinfo(imin)
     normalized_image(34:41,1:8) = 0.5;
     normalized_image(1:8,34:41) = 0.5;
     normalized_image(33:37,33:37) = 0.5;
-    
-    imshow(normalized_image)
-    
+
     [height, width] = size(normalized_image);
     counter = 1;
     for y = 1 : width
@@ -34,7 +34,7 @@ function strout = getinfo(imin)
             end
         end
     end
-    
+
     strout = '';
     for z = 1 : length(number_vector(1:end/8)) %go through vector/8 since binary = 8 numbers/letter
         letter_string = num2str(number_vector(1:8)); %select the 8 first and make them into a string
@@ -42,4 +42,4 @@ function strout = getinfo(imin)
         number_vector = number_vector(9:end); %remove the 8 first numbers in vector
     end
 
-return;
+return
