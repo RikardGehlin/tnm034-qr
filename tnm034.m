@@ -19,7 +19,8 @@ double_image = im2double(image); % turning the pixel-values into double-values
 normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
 
 [height, width] = size(normalized_image);
-
+%noise(normalized_image); % calls a function to remove all the noise in the
+%picture
 % Hård tröskling... ändra?
 normalized_image(normalized_image<0.5) = 0;
 normalized_image(normalized_image>=0.5) = 1;
@@ -99,6 +100,7 @@ toc
         B = ( T + P + Q )/3;
         B(isnan(B)) = 1;
         B = vec2mat(B,height);
+
         
         [b,ix] = sort(B(:),'ascend');
         [x y] = ind2sub(size(B), ix(1:12));
@@ -106,14 +108,18 @@ toc
         hold on;
         plot(x,y,'r+');
         hold off;
-strout = B;
+
 toc
+
 %localization(normalized_image);
 
 %noise(normalized_image); % calls a function to remove all the noise in the picture
 
-%imshow(normalized_image);
-%text = getinfo(img);
 
-%strout=char(text); % the output
+
+
+rotated_image = rotation(B, corner, right, bottom);
+large_qr_code = crop(rotated_image);
+qr_code = scale(large_qr-code);
+strout = getinfo(qr_code) % the output
 return;

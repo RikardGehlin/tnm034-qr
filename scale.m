@@ -2,9 +2,9 @@
 %   A function that scales the image to 41*41
 % PARAMETERS
 %   IN:
-%     imin: The input image normalized between 0 and 1
+%     imin: The qr-code in fullsize
 %   OUT:
-%     imout: The resulting image, centered
+%     imout: The qr-code at 41*41
 
 function imout = noise(imin)
     image = imread(imin); %read the submitted image
@@ -12,14 +12,8 @@ function imout = noise(imin)
     normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
     normalized_image = normalized_image(:,:,1); %only need to calculate in one dimension, since black/white
     
-    for i=1:41
-        for j=1:41
-            %här behövs en funktion för att kunna skala om till enskilda
-            %pixelvärden
-            new_image(i,j) = normalized_image(8,8); 
-        end
-    end
+    B = imresize(normalized_image, [41 41]);
     
-    imshow(new_image)
+    imshow(B)
     
 return;
