@@ -38,9 +38,6 @@ Q = zeros(height, width);
 B = zeros(height, width);
 im_edges = bwmorph(im_edges, 'skel', Inf);
 
-% Testning av hur man bygger "axlarna"
-%tjena = [[400 300]; flipdim(find_edge_positions(im_edges, [400 300], [0 -1]), 1); find_edge_positions(im_edges, [400 300], [0 1])];
-%tjena(:,2)
 
 
 elements = 1:numel(im_edges);
@@ -76,17 +73,16 @@ elements = 1:numel(im_edges);
        toc
 'find vectors'        
         
-        
+        T = ones(1,numel(elements));
+        P = ones(1,numel(elements));
+        Q = ones(1,numel(elements));
         black_points = points;
         for i = 1:numel(black_points)
             origin = [(black_points(i) - height * floor((black_points(i)-1)/height)) (floor((black_points(i)-1)/height) + 1)];
             x_axis(:,black_points(i)) = find_edge_positions(im_edges, [height, width], origin, 'horizontal');
             y_axis(:,black_points(i)) = find_edge_positions(im_edges, [height, width], origin, 'vertical');
         end
-toc
-%find_edge_positions(im_edges, [height, width], 104236, 'horizontal')
-
-        
+                
         % use x- and y-axis as r- and s- axis temporarily
         r_axis = x_axis;
         s_axis = y_axis;
@@ -94,9 +90,19 @@ toc
         % s_axis = 7 värden ifrån (y,x) i s-led
         
 'calculate weighting'
-        T = ( central_symmetry(x_axis) + central_symmetry(y_axis) + central_symmetry(r_axis) + central_symmetry(s_axis) )/4;
-        P = ( ratio_characteristic(x_axis) + ratio_characteristic(y_axis) + ratio_characteristic(r_axis) + ratio_characteristic(s_axis) )/4;
-        Q = ( square_characteristic(x_axis,y_axis) + square_characteristic(r_axis, s_axis) )/2;
+        for i = 1:numel(black_points)
+            T(black_points(i)) = ( central_symmetry(x_axis(:,black_points(i))) + central_symmetry(y_axis(:,black_points(i))) + central_symmetry(r_axis(:,black_points(i))) + central_symmetry(s_axis(:,black_points(i))) )/4;
+            P(black_points(i)) = ( ratio_characteristic(x_axis(:,black_points(i))) + ratio_characteristic(y_axis(:,black_points(i))) + ratio_characteristic(r_axis(:,black_points(i))) + ratio_characteristic(s_axis(:,black_points(i))) )/4;
+            Q(black_points(i)) = ( square_characteristic(x_axis(:,black_points(i)),y_axis(:,black_points(i))) + square_characteristic(r_axis(:,black_points(i)), s_axis(:,black_points(i))) )/2;
+        end
+toc
+
+
+        
+
+%         T = ( central_symmetry(x_axis) + central_symmetry(y_axis) + central_symmetry(r_axis) + central_symmetry(s_axis) )/4;
+%         P = ( ratio_characteristic(x_axis) + ratio_characteristic(y_axis) + ratio_characteristic(r_axis) + ratio_characteristic(s_axis) )/4;
+%         Q = ( square_characteristic(x_axis,y_axis) + square_characteristic(r_axis, s_axis) )/2;
         B = ( T + P + Q )/3;
         B(isnan(B)) = 1;
         B = vec2mat(B,height);
