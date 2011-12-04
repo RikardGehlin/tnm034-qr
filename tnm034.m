@@ -20,23 +20,18 @@ double_image = im2double(image); % turning the pixel-values into double-values
 normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
 
 [height, width] = size(normalized_image);
-%noise(normalized_image); % calls a function to remove all the noise in the
-%picture
-% Hård tröskling... ändra?
+
+% Hard thresholding, prepare image for high-pass filtering
 normalized_image(normalized_image<0.5) = 0;
 normalized_image(normalized_image>=0.5) = 1;
 
 im_edges = edge_detection(normalized_image);
 
-% Hård tröskling... OK?
+% Hard thresholding, convert image to binary
 im_edges(im_edges<0.05) = 0;
 im_edges(im_edges>=0.05) = 1;
 
-% pre-allocate variables to speed up the program
-T = zeros(height, width);
-P = zeros(height, width);
-Q = zeros(height, width);
-B = zeros(height, width);
+% Make sure edges are of single pixel width
 im_edges = bwmorph(im_edges, 'skel', Inf);
 
 
@@ -45,15 +40,16 @@ elements = 1:numel(im_edges);
         x_axis = ones(7,numel(elements));
         y_axis = ones(7,numel(elements));
         
-        black_points = find(normalized_image == 0);
         
         edges = find(im_edges == 1);
         
+        % Ratio of the QR-codes fiducial marks
         ratio = [1 1 3 1 1];
-
         
         points = zeros(1,(numel(edges)-5));
-
+        
+        % Search image for fiducial marks
+        % fulfilling the ratio
         for i = 1:(numel(edges)-5)
             
             vec = edges(i:(i+5));
@@ -70,6 +66,7 @@ elements = 1:numel(im_edges);
        
 %'find vectors'        
         
+        % pre-allocate variables to speed up the program
         T = ones(1,numel(elements));
         P = ones(1,numel(elements));
         Q = ones(1,numel(elements));
@@ -95,7 +92,7 @@ elements = 1:numel(im_edges);
         
         B = ( T + P + Q )/3;
         B = vec2mat(B,height);
-
+        
 %'calculate FIP coordinates'
         [b,ix] = sort(B(:),'ascend');
         [x y] = ind2sub(size(B), ix(1:12));
@@ -167,50 +164,54 @@ fips(2,:) = cell2mat(struct2cell(regionprops(im_segmented==2, 'Centroid')));
 fips(3,:) = cell2mat(struct2cell(regionprops(im_segmented==3, 'Centroid')));
 
 if(fips(1,2) == max(fips(:,2)))
-    bottom = round(fips(1,end:-1:1))
+    bottom = round(fips(1,end:-1:1));
     if(fips(2,1) == max(fips(:,1)))
-        right = round(fips(2,end:-1:1))
-        corner = round(fips(3,end:-1:1))
+        right = round(fips(2,end:-1:1));
+        corner = round(fips(3,end:-1:1));
     else
-        right = round(fips(3,end:-1:1))
-        corner = round(fips(2,end:-1:1))
+        right = round(fips(3,end:-1:1));
+        corner = round(fips(2,end:-1:1));
     end
 elseif (fips(2,2) == max(fips(:,2)))
-    bottom = round(fips(2,end:-1:1))
+    bottom = round(fips(2,end:-1:1));
     if(fips(1,1) == max(fips(:,1)))
-        right = round(fips(1,end:-1:1))
-        corner = round(fips(3,end:-1:1))
+        right = round(fips(1,end:-1:1));
+        corner = round(fips(3,end:-1:1));
     else
-        right = round(fips(3,end:-1:1))
-        corner = round(fips(1,end:-1:1))
+        right = round(fips(3,end:-1:1));
+        corner = round(fips(1,end:-1:1));
     end
 else
-    bottom = round(fips(3,end:-1:1))
+    bottom = round(fips(3,end:-1:1));
     if(fips(2,1) == max(fips(:,1)))
-        right = round(fips(2,end:-1:1))
-        corner = round(fips(1,end:-1:1))
+        right = round(fips(2,end:-1:1));
+        corner = round(fips(1,end:-1:1));
     else
-        right = round(fips(1,end:-1:1))
-        corner = round(fips(2,end:-1:1))
+        right = round(fips(1,end:-1:1));
+        corner = round(fips(2,end:-1:1));
     end
 end
- figure(10)
- imshow(image)
- hold on
- plot(corner(2),corner(1),'r+');
- plot(right(2),right(1),'g+');
- plot(bottom(2),bottom(1),'b+');
- hold off
+
+% figure(10)
+%  imshow(image)
+%  hold on
+%  plot(corner(2),corner(1),'r+');
+%  plot(right(2),right(1),'g+');
+%  plot(bottom(2),bottom(1),'b+');
+%  hold off
  
 [rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
-figure(3)
-imshow(rotated_image)
+%figure(3)
+%imshow(rotated_image)
+
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
-figure(4)
-imshow(cropped)
+%figure(4)
+%imshow(cropped)
+
 scaled = scale(cropped);
-figure(5)
-imshow(scaled)
+%figure(5)
+%imshow(scaled)
+
 getinfo(scaled)
 strout = 'ERROR';
 toc
