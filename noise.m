@@ -8,5 +8,15 @@
 %     imout: The resulting image, free of noise
 
 function imout = noise(imin)
+    Laplacefilter = [0 1 0; 1 -4 1; 0 1 0];
 
-return;
+    bild = imread(imin);
+    NormBild = im2double(bild);
+
+    resultat = filter2(Laplacefilter, NormBild,'same');
+    imshow(resultat)
+   
+    imout = NormBild-resultat;
+    figure
+    imshow(imout)
+return
