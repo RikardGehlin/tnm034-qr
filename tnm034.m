@@ -113,22 +113,22 @@ toc
 toc
 
 %for image2
-%bottom = [y(1) x(1)]
-%corner = [y(2) x(2)]
-%right = [y(3) x(3)]
+bottom = [y(1) x(1)]
+corner = [y(2) x(2)]
+right = [y(3) x(3)]
 
 %for image4
 %bottom = [y(1) x(1)]
 %corner = [y(2) x(2)]
 %right = [y(3) x(3)]
 
-%[rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
-%imshow(rotated_image)
-%cropped = crop(rotated_image, new_corner, new_right, new_bottom);
-%figure
-%imshow(cropped)
-%scaled = scale(cropped);
-%figure
-%imshow(scaled)
-%getinfo(scaled)
+[rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
+imshow(rotated_image)
+cropped = crop(rotated_image, new_corner, new_right, new_bottom);
+figure
+imshow(cropped)
+scaled = scale(cropped);
+figure
+imshow(scaled)
+getinfo(scaled)
 return
