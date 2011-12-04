@@ -19,23 +19,20 @@ double_image = im2double(image); % turning the pixel-values into double-values
 normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
 
 [height, width] = size(normalized_image);
+
 clean_image = noise(normalized_image); % calls a function to remove all the noise in the
 %picture
-% Hård tröskling... ändra?
+% Hard thresholding, prepare image for high-pass filtering
 clean_image(clean_image<0.5) = 0;
 clean_image(clean_image>=0.5) = 1;
 
 im_edges = edge_detection(clean_image);
 
-% Hård tröskling... OK?
+% Hard thresholding, convert image to binary
 im_edges(im_edges<0.05) = 0;
 im_edges(im_edges>=0.05) = 1;
 
-% pre-allocate variables to speed up the program
-T = zeros(height, width);
-P = zeros(height, width);
-Q = zeros(height, width);
-B = zeros(height, width);
+% Make sure edges are of single pixel width
 im_edges = bwmorph(im_edges, 'skel', Inf);
 
 
@@ -44,15 +41,16 @@ elements = 1:numel(im_edges);
         x_axis = ones(7,numel(elements));
         y_axis = ones(7,numel(elements));
         
-        black_points = find(normalized_image == 0);
         
         edges = find(im_edges == 1);
         
+        % Ratio of the QR-codes fiducial marks
         ratio = [1 1 3 1 1];
-
         
         points = zeros(1,(numel(edges)-5));
-
+        
+        % Search image for fiducial marks
+        % fulfilling the ratio
         for i = 1:(numel(edges)-5)
             
             vec = edges(i:(i+5));
@@ -69,6 +67,7 @@ elements = 1:numel(im_edges);
        
 %'find vectors'        
         
+        % pre-allocate variables to speed up the program
         T = ones(1,numel(elements));
         P = ones(1,numel(elements));
         Q = ones(1,numel(elements));
@@ -94,7 +93,7 @@ elements = 1:numel(im_edges);
         
         B = ( T + P + Q )/3;
         B = vec2mat(B,height);
-
+        
 %'calculate FIP coordinates'
         [b,ix] = sort(B(:),'ascend');
         [x y] = ind2sub(size(B), ix(1:12));
@@ -193,8 +192,8 @@ else
         corner = round(fips(2,end:-1:1));
     end
 end
- 
-[rotated_image, new_corner, new_right, new_bottom] = rotation(clean_image, corner, right, bottom);
+
+[rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
 scaled = scale(cropped);
 strout = getinfo(scaled);
