@@ -166,34 +166,30 @@ fips(1,:) = cell2mat(struct2cell(regionprops(im_segmented==1, 'Centroid')));
 fips(2,:) = cell2mat(struct2cell(regionprops(im_segmented==2, 'Centroid')));
 fips(3,:) = cell2mat(struct2cell(regionprops(im_segmented==3, 'Centroid')));
 
-figure(10)
-imshow(image)
-hold on
-plot(fips(1,1),fips(1,2),'r+');
-plot(fips(2,1),fips(2,2),'g+');
-plot(fips(3,1),fips(3,2),'b+');
-hold off
+% figure(10)
+% imshow(image)
+% hold on
+% plot(fips(1,1),fips(1,2),'r+');
+% plot(fips(2,1),fips(2,2),'g+');
+% plot(fips(3,1),fips(3,2),'b+');
+% hold off
 
 % for image2
-bottom = round(fips(1,:))
-corner = round(fips(2,:))
-right = round(fips(3,:))
+corner = round(fips(2,end:-1:1));
+bottom = round(fips(1,end:-1:1));
+right = round(fips(3,end:-1:1));
 
-%for image4
-%bottom = [y(1) x(1)]
-%corner = [y(2) x(2)]
-%right = [y(3) x(3)]
-% 
+
 [rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
 figure(3)
 imshow(rotated_image)
+
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
 figure(4)
 imshow(cropped)
 scaled = scale(cropped);
 figure(5)
 imshow(scaled)
-getinfo(scaled)
-%strout = 'ERROR';
+strout = getinfo(scaled)
 toc
 return

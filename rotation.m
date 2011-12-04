@@ -19,28 +19,26 @@ normalized_image(normalized_image >= 0.5) = 1;
     normalized_image(right(1), right(2)) = 128;
     normalized_image(bottom(1), bottom(2)) = 129;
 
-    vector_corner_to_right = right - corner; %hörn till höger
-
-    vector_imaginary = [bottom(1), right(2)];
-    DP = dot(vector_corner_to_right, vector_imaginary);
-    magvector1 = norm(vector_corner_to_right); 
-    magvector2 = norm(vector_imaginary);
-    radian = acos(DP/(magvector1*magvector2));
-    angle = radian*(180/pi);
-      
-    if(bottom(1) < corner(1))
-       B = imrotate(imin,90-correction);
+    fip_vec = right - corner; %hörn till höger
+    ref_vec = [0, 1];
+     
+    CosTheta = dot(fip_vec,ref_vec)/(norm(fip_vec)*norm(ref_vec));
+    angle = acos(CosTheta)*180/pi;
+    
+    if(fip_vec(1) < 0)
+        B = imrotate(normalized_image, -angle);
     else
-       %49 if bild4, 52 if bild2 from tnm034 else 53, 53 if bild3
-       B = imrotate(normalized_image,52-angle);
+        B = imrotate(normalized_image, angle);
     end
+
     [nRowC, nColC] = find(B==127);
-    new_corner = [nRowC, nColC];
+    new_corner = [nRowC(1), nColC(1)];
     
     [nRowR, nColR] = find(B==128);
-    new_right = [nRowR, nColR];
+    new_right = [nRowR(1), nColR(1)];
     
     [nRowB, nColB] = find(B==129);
-    new_bottom = [nRowB, nColB];
+    new_bottom = [nRowB(1), nColB(1)];
+    
     imout=B;
  return
