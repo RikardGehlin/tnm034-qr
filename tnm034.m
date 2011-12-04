@@ -9,7 +9,6 @@ function strout = tnm034(imin)
 %     strout: The resulting character string of the coded message. 
 %     The string must be in a pre-defined format given in the course description.
 
-tic
 image = imread(imin); % reads the given image
 
 if isrgb(image)
@@ -20,13 +19,13 @@ double_image = im2double(image); % turning the pixel-values into double-values
 normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
 
 [height, width] = size(normalized_image);
-%noise(normalized_image); % calls a function to remove all the noise in the
+clean_image = noise(normalized_image); % calls a function to remove all the noise in the
 %picture
 % Hård tröskling... ändra?
-normalized_image(normalized_image<0.5) = 0;
-normalized_image(normalized_image>=0.5) = 1;
+clean_image(clean_image<0.5) = 0;
+clean_image(clean_image>=0.5) = 1;
 
-im_edges = edge_detection(normalized_image);
+im_edges = edge_detection(clean_image);
 
 % Hård tröskling... OK?
 im_edges(im_edges<0.05) = 0;
@@ -167,51 +166,36 @@ fips(2,:) = cell2mat(struct2cell(regionprops(im_segmented==2, 'Centroid')));
 fips(3,:) = cell2mat(struct2cell(regionprops(im_segmented==3, 'Centroid')));
 
 if(fips(1,2) == max(fips(:,2)))
-    bottom = round(fips(1,end:-1:1))
+    bottom = round(fips(1,end:-1:1));
     if(fips(2,1) == max(fips(:,1)))
-        right = round(fips(2,end:-1:1))
-        corner = round(fips(3,end:-1:1))
+        right = round(fips(2,end:-1:1));
+        corner = round(fips(3,end:-1:1));
     else
-        right = round(fips(3,end:-1:1))
-        corner = round(fips(2,end:-1:1))
+        right = round(fips(3,end:-1:1));
+        corner = round(fips(2,end:-1:1));
     end
 elseif (fips(2,2) == max(fips(:,2)))
-    bottom = round(fips(2,end:-1:1))
+    bottom = round(fips(2,end:-1:1));
     if(fips(1,1) == max(fips(:,1)))
-        right = round(fips(1,end:-1:1))
-        corner = round(fips(3,end:-1:1))
+        right = round(fips(1,end:-1:1));
+        corner = round(fips(3,end:-1:1));
     else
-        right = round(fips(3,end:-1:1))
-        corner = round(fips(1,end:-1:1))
+        right = round(fips(3,end:-1:1));
+        corner = round(fips(1,end:-1:1));
     end
 else
-    bottom = round(fips(3,end:-1:1))
+    bottom = round(fips(3,end:-1:1));
     if(fips(2,1) == max(fips(:,1)))
-        right = round(fips(2,end:-1:1))
-        corner = round(fips(1,end:-1:1))
+        right = round(fips(2,end:-1:1));
+        corner = round(fips(1,end:-1:1));
     else
-        right = round(fips(1,end:-1:1))
-        corner = round(fips(2,end:-1:1))
+        right = round(fips(1,end:-1:1));
+        corner = round(fips(2,end:-1:1));
     end
 end
- figure(10)
- imshow(image)
- hold on
- plot(corner(2),corner(1),'r+');
- plot(right(2),right(1),'g+');
- plot(bottom(2),bottom(1),'b+');
- hold off
  
-[rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
-figure(3)
-imshow(rotated_image)
+[rotated_image, new_corner, new_right, new_bottom] = rotation(clean_image, corner, right, bottom);
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
-figure(4)
-imshow(cropped)
 scaled = scale(cropped);
-figure(5)
-imshow(scaled)
-getinfo(scaled)
-strout = 'ERROR';
-toc
+strout = getinfo(scaled);
 return

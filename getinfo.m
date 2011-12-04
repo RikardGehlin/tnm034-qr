@@ -8,28 +8,21 @@
 %     strout: The resulting character string of the coded message. 
 
 function strout = getinfo(imin)
-	image = imin; %read the submitted image
-    %------------------------------
-    %might have been done in previous step!
-    image = im2double(image); % turning the pixel-values into double-values
-    image = image / max(image(:)); % normalizes between 0 and 1
-    normalized_image = image(:,:,1); %only need to calculate in one dimension, since black/white
-    normalized_image(normalized_image<0.5) = 0;
-    normalized_image(normalized_image>=0.5) = 1;
-    %-----------------------------
+    imin(imin<0.5) = 0;
+    imin(imin>=0.5) = 1;
     
     %making the fips into gray areas
-    normalized_image(1:8,1:8) = 0.5;
-    normalized_image(34:41,1:8) = 0.5;
-    normalized_image(1:8,34:41) = 0.5;
-    normalized_image(33:37,33:37) = 0.5;
+    imin(1:8,1:8) = 0.5;
+    imin(34:41,1:8) = 0.5;
+    imin(1:8,34:41) = 0.5;
+    imin(33:37,33:37) = 0.5;
 
-    [height, width] = size(normalized_image);
+    [height, width] = size(imin);
     counter = 1;
     for y = 1 : width
         for x = 1 : height
-            if(normalized_image(x,y) ~= 0.5) %if pixel is not gray
-                number_vector(counter) = normalized_image(x,y); %then add into vector
+            if(imin(x,y) ~= 0.5) %if pixel is not gray
+                number_vector(counter) = imin(x,y); %then add into vector
                 counter = counter + 1;
             end
         end

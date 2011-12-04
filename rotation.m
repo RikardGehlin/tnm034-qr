@@ -9,10 +9,10 @@
 
 function [imout, new_corner, new_right, new_bottom] = rotation(imin, corner, right, bottom)
 
-double_image = im2double(imin); % turning the pixel-values into double-values
-normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
-normalized_image(normalized_image < 0.5) = 0;
-normalized_image(normalized_image >= 0.5) = 1;
+    double_image = im2double(imin); % turning the pixel-values into double-values
+    normalized_image = double_image / max(double_image(:)); % normalizes between 0 and 1
+    normalized_image(normalized_image < 0.5) = 0;
+    normalized_image(normalized_image >= 0.5) = 1;
     
     %sätter ett högt värde så man kan hitta de senare 
     normalized_image(corner(1), corner(2)) = 127;

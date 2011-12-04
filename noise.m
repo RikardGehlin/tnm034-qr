@@ -9,14 +9,6 @@
 
 function imout = noise(imin)
     Laplacefilter = [0 1 0; 1 -4 1; 0 1 0];
-
-    bild = imread(imin);
-    NormBild = im2double(bild);
-
-    resultat = filter2(Laplacefilter, NormBild,'same');
-    imshow(resultat)
-   
-    imout = NormBild-resultat;
-    figure
-    imshow(imout)
+    resultat = filter2(Laplacefilter, imin,'same');
+    imout = imin-resultat;
 return
