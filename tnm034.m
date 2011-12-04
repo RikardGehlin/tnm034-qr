@@ -166,30 +166,52 @@ fips(1,:) = cell2mat(struct2cell(regionprops(im_segmented==1, 'Centroid')));
 fips(2,:) = cell2mat(struct2cell(regionprops(im_segmented==2, 'Centroid')));
 fips(3,:) = cell2mat(struct2cell(regionprops(im_segmented==3, 'Centroid')));
 
-% figure(10)
-% imshow(image)
-% hold on
-% plot(fips(1,1),fips(1,2),'r+');
-% plot(fips(2,1),fips(2,2),'g+');
-% plot(fips(3,1),fips(3,2),'b+');
-% hold off
-
-% for image2
-corner = round(fips(2,end:-1:1));
-bottom = round(fips(1,end:-1:1));
-right = round(fips(3,end:-1:1));
-
-
+if(fips(1,2) == max(fips(:,2)))
+    bottom = round(fips(1,end:-1:1))
+    if(fips(2,1) == max(fips(:,1)))
+        right = round(fips(2,end:-1:1))
+        corner = round(fips(3,end:-1:1))
+    else
+        right = round(fips(3,end:-1:1))
+        corner = round(fips(2,end:-1:1))
+    end
+elseif (fips(2,2) == max(fips(:,2)))
+    bottom = round(fips(2,end:-1:1))
+    if(fips(1,1) == max(fips(:,1)))
+        right = round(fips(1,end:-1:1))
+        corner = round(fips(3,end:-1:1))
+    else
+        right = round(fips(3,end:-1:1))
+        corner = round(fips(1,end:-1:1))
+    end
+else
+    bottom = round(fips(3,end:-1:1))
+    if(fips(2,1) == max(fips(:,1)))
+        right = round(fips(2,end:-1:1))
+        corner = round(fips(1,end:-1:1))
+    else
+        right = round(fips(1,end:-1:1))
+        corner = round(fips(2,end:-1:1))
+    end
+end
+ figure(10)
+ imshow(image)
+ hold on
+ plot(corner(2),corner(1),'r+');
+ plot(right(2),right(1),'g+');
+ plot(bottom(2),bottom(1),'b+');
+ hold off
+ 
 [rotated_image, new_corner, new_right, new_bottom] = rotation(normalized_image, corner, right, bottom);
 figure(3)
 imshow(rotated_image)
-
 cropped = crop(rotated_image, new_corner, new_right, new_bottom);
 figure(4)
 imshow(cropped)
 scaled = scale(cropped);
 figure(5)
 imshow(scaled)
-strout = getinfo(scaled)
+getinfo(scaled)
+strout = 'ERROR';
 toc
 return
